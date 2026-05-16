@@ -18,7 +18,8 @@
             --bg-gray: #f8fafc;
             --text-main: #334155;
             --white: #ffffff;
-            --header-height: 80px; /* ヘッダーの高さを定義 */
+            /* --- 【改修】ヘッダーの高さを定義 --- */
+            --header-height: 80px; 
         }
 
         /* --- 基本設定 --- */
@@ -30,7 +31,8 @@
         html {
             scroll-behavior: smooth;
         }
-        /* スムーズスクロール時の停止位置を調整 */
+
+        /* --- 【改修】スムーズスクロール時の停止位置を調整（タイトルが隠れないようにする） --- */
         [id] {
             scroll-margin-top: var(--header-height);
         }
@@ -80,7 +82,7 @@
             border-radius: 2px;
         }
 
-        /* --- ヘッダー --- */
+        /* --- 【改修】ヘッダー & ハンバーガーメニュー設定 --- */
         header {
             background-color: rgba(255, 255, 255, 0.95);
             padding: 10px 0;
@@ -97,15 +99,71 @@
             justify-content: space-between;
             align-items: center;
             width: 100%;
+            position: relative;
         }
         .header-logo img {
             height: 50px;
             width: auto;
             display: block;
         }
-        nav {
+
+        /* スマホ用メニューボタン（チェックボックス） */
+        .menu-btn {
             display: none;
         }
+        /* 三本線アイコン */
+        .menu-icon {
+            display: block;
+            position: relative;
+            width: 30px;
+            height: 22px;
+            cursor: pointer;
+            z-index: 1100;
+        }
+        .menu-icon span {
+            display: block;
+            position: absolute;
+            width: 100%;
+            height: 3px;
+            background-color: var(--navy);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+        .menu-icon span:nth-child(1) { top: 0; }
+        .menu-icon span:nth-child(2) { top: 9px; }
+        .menu-icon span:nth-child(3) { top: 18px; }
+
+        /* スマホメニューの展開スタイル */
+        nav {
+            display: none;
+            position: absolute;
+            top: 55px;
+            left: -20px;
+            width: calc(100% + 40px);
+            background-color: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 10px 15px rgba(0,0,0,0.05);
+            border-top: 1px solid #e2e8f0;
+            padding: 20px 0;
+        }
+        nav ul {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        nav ul li a {
+            font-weight: 900;
+            color: var(--navy);
+            font-size: 1.1rem;
+            display: block;
+            padding: 5px 20px;
+        }
+
+        /* チェックボックスが入った時の動き */
+        .menu-btn:checked ~ .menu-icon span:nth-child(1) { transform: translateY(9px) rotate(45deg); }
+        .menu-btn:checked ~ .menu-icon span:nth-child(2) { opacity: 0; }
+        .menu-btn:checked ~ .menu-icon span:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
+        .menu-btn:checked ~ nav { display: block; }
 
         /* --- ヒーローエリア --- */
         .hero {
@@ -346,7 +404,7 @@
             white-space: nowrap;
         }
 
-        /* --- エリア情報 (マップ画像削除後の調整) --- */
+        /* --- エリア情報 --- */
         .info-section {
             padding: 80px 0;
             background-color: #f1f5f9;
@@ -356,12 +414,12 @@
             padding: 40px;
             border-radius: 24px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            max-width: 800px; /* 画像がないため、少し横幅を絞って見やすく */
+            max-width: 800px;
             margin: 0 auto;
         }
         .area-tags {
             display: grid;
-            grid-template-columns: 1fr; /* スマホでは縦並び */
+            grid-template-columns: 1fr;
             gap: 15px;
             margin-top: 25px;
             margin-bottom: 10px;
@@ -375,13 +433,9 @@
             text-align: center;
             border-bottom: 5px solid #bae6fd;
             font-size: 1.2rem;
-            transition: transform 0.2s;
-        }
-        .tag-item:hover {
-            transform: translateY(-3px);
         }
 
-        /* --- ご依頼の流れ --- */
+        /* --- 【改修】ご依頼の流れ：ステップ感のあるデザイン --- */
         .flow-container {
             position: relative;
             padding-left: 50px;
@@ -473,11 +527,32 @@
             margin-bottom: 10px;
         }
 
-        /* --- メディアクエリ（PC対応） --- */
+        /* --- メディアクエリ（PC対応時の表示切り替え） --- */
         @media (min-width: 768px) {
-            nav { display: block; }
-            nav ul { display: flex; gap: 25px; font-weight: bold; }
-            nav a:hover { color: var(--primary-blue); }
+            /* 【改修】PCでは三本線アイコンを隠す */
+            .menu-icon { display: none; }
+            
+            /* 【改修】PCではナビゲーションを常に横並びで表示 */
+            nav {
+                display: block !important;
+                position: static;
+                width: auto;
+                background-color: transparent;
+                box-shadow: none;
+                border-top: none;
+                padding: 0;
+            }
+            nav ul {
+                flex-direction: row;
+                gap: 25px;
+            }
+            nav ul li a {
+                font-size: 1rem;
+                padding: 0;
+            }
+            nav a:hover {
+                color: var(--primary-blue);
+            }
 
             .header-logo img { height: 60px; }
             .hero { padding: 80px 0; }
@@ -520,6 +595,15 @@
             <div class="header-logo">
                 <img src="walogo.png" alt="金沢排水サービス マスマル">
             </div>
+            
+            <!-- 【改修】ハンバーガーメニュー用の隠しチェックボックスとアイコン -->
+            <input type="checkbox" id="menu-btn" class="menu-btn">
+            <label class="menu-icon" for="menu-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </label>
+
             <nav>
                 <ul>
                     <li><a href="#services">サービス</a></li>
@@ -536,9 +620,7 @@
     <section class="hero">
         <div class="container hero-content">
             <div class="hero-images-container">
-                <!-- 1つ目：タイトルロゴ（大） -->
                 <img src="masumaru.png" alt="金沢排水サービス マスマル タイトルロゴ" class="hero-img-box">
-                <!-- 2つ目：キャッチコピー -->
                 <img src="smile.png" alt="マスマルで地域にスマイルを" class="hero-img-box">
             </div>
             
@@ -675,7 +757,7 @@
     <!-- Area & Process -->
     <section id="area" class="info-section">
         <div class="container">
-            <!-- 対応エリア (画像削除後の調整版) -->
+            <!-- 対応エリア -->
             <div class="section-title">
                 <h2>対応エリア</h2>
             </div>
@@ -701,6 +783,7 @@
                     <h2>ご依頼の流れ</h2>
                 </div>
                 <div class="area-info-card">
+                    <!-- 【改修】ステップ感のあるデザインを適用 -->
                     <div class="flow-container">
                         <div class="flow-step">
                             <span class="flow-number">1</span>
